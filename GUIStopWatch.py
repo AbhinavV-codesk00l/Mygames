@@ -1,4 +1,5 @@
 from tkinter import *
+
 class timer:
     """
     represents the time in the form hour:min:sec:milisecend
@@ -26,14 +27,14 @@ class timer:
         adds one millisecond to the timer
         """
         self.miliSec += 1 
-        if self.miliSec > 999:
-            self.miliSec -= 999 
+        if self.miliSec > 1000:
+            self.miliSec -= 1000 
             self.sec += 1 
-        if self.sec > 59:
-            self.sec -= 59
+        if self.sec > 60:
+            self.sec -= 60
             self.min += 1 
-        if self.min > 59:
-            self.min -= 59 
+        if self.min > 60:
+            self.min -= 60 
             self.hour += 1 
 
     def restart(self):
@@ -52,25 +53,32 @@ class counterFrame(Frame):
         self.counterLabel = Label(self,width=35,height=5,relief=RAISED,text=str(self.counter))
         self.counterLabel.grid(row=0,column=0)
         
-        self.resetButton = Button(self,text="reset",width=10,height=2,command=self.counter.restart)
+        self.resetButton = Button(self,text="reset",width=10,height=2,command=self.restart)
         self.resetButton.grid(row=1,column=0)
-
-        self.stopButton = Button(self,text="stop",width=10,height=2,command=self.changeState)
-        self.stopButton.grid()
         
+        self.changeStateButton = Button(self,text="stop",width=10,height=2,command=self.stop)
+        self.changeStateButton.grid(row=2,column=0)
+
         self.increment()
     
     def increment(self):
         self.counterLabel["text"] = str(self.counter)
         if self.startTime:    
             self.counter.add()
-            self.after(1,self.increment)
-    
-    def changeState(self):
+        self.after(1,self.increment)
+
+    def restart(self):
+        self.counter.restart()
         self.counterLabel["text"] = str(self.counter)
+    
+    def stop(self):
         if self.startTime:
             self.startTime = False 
-            self.stopButton["text"] = "start"
-        else:
+            self.changeStateButton["text"] = "start"
+        else: 
             self.startTime = True 
-            self.stopButton["text"] = "stop"
+            self.changeStateButton["text"] = "stop"
+
+root = Tk()
+timeKeeper = counterFrame(root)
+root.mainloop()
